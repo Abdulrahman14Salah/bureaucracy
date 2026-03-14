@@ -1,16 +1,20 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+@php
+    $dashboardRoute = auth()->check() && auth()->user()->hasRole('admin') ? route('admin.dashboard') : route('dashboard');
+@endphp
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ auth()->check() ? route('dashboard') : url('/') }}">
+                    <a href="{{ auth()->check() ? $dashboardRoute : url('/') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @auth
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        <x-nav-link :href="$dashboardRoute" :active="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
                     @endauth
@@ -79,7 +83,7 @@
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         @auth
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                <x-responsive-nav-link :href="$dashboardRoute" :active="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
             </div>
